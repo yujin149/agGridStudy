@@ -1,0 +1,12 @@
+@import './reset.css';
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;;
+    font-size: 1.5rem;
+    color: #64748b;
+    background-color:#f8fafc;
+}
