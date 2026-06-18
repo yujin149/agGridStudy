@@ -1,0 +1,90 @@
+:root {
+    /* Primary */
+    --primary-color-50: #eff6ff;
+    --primary-color-100: #dbeafe;
+    --primary-color-200: #bfdbfe;
+    --primary-color-300: #93c5fd;
+    --primary-color-400: #60a5fa;
+    --primary-color-500: #2563eb;
+    --primary-color-600: #1d4ed8;
+    --primary-color-700: #1e40af;
+    --primary-color-800: #1e3a8a;
+    --primary-color-900: #172554;
+
+    /* Gray */
+    --gray-color-50: #f8fafc;
+    --gray-color-100: #f1f5f9;
+    --gray-color-200: #e2e8f0;
+    --gray-color-300: #cbd5e1;
+    --gray-color-400: #94a3b8;
+    --gray-color-500: #64748b;
+    --gray-color-600: #475569;
+    --gray-color-700: #334155;
+    --gray-color-800: #1e293b;
+    --gray-color-900: #0f172a;
+
+    --success-color-500: #10b981;
+    --success-color-50: #ecfdf5;
+    --danger-color-500: #ef4444;
+    --danger-color-50: #fef2f2;
+
+    /* Semantic */
+    --background-color: var(--gray-color-50);
+    --card-background-color: #ffffff;
+    --text-primary-color: var(--gray-color-900);
+    --text-secondary-color: var(--gray-color-500);
+    --border-color: var(--gray-color-300);
+
+    --font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+    --header-height: 7rem;
+    --sidebar-width: 22.5rem;
+    --dept-tree-width: 36rem;
+    --tabs-height: 4.4rem;
+
+    --radius-sm: 0.4rem;
+    --radius-md: 1rem;
+    --radius-md2: 2rem;
+    --radius-lg: 3rem;
+
+    --shadow-sm: 0 0.1rem 0.2rem rgba(15, 23, 42, 0.05);
+    --shadow-md: 0.3rem 0.3rem 1.2rem rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='dark'] {
+    /* Primary */
+    --primary-color-50: #172554;
+    --primary-color-100: #1e3a8a;
+    --primary-color-200: #1e40af;
+    --primary-color-300: #1d4ed8;
+    --primary-color-400: #2563eb;
+    --primary-color-500: #3b82f6;
+    --primary-color-600: #60a5fa;
+    --primary-color-700: #93c5fd;
+    --primary-color-800: #bfdbfe;
+    --primary-color-900: #dbeafe;
+
+    /* Gray */
+    --gray-color-50: #020617;
+    --gray-color-100: #0f172a;
+    --gray-color-200: #1e293b;
+    --gray-color-300: #334155;
+    --gray-color-400: #475569;
+    --gray-color-500: #94a3b8;
+    --gray-color-600: #cbd5e1;
+    --gray-color-700: #e2e8f0;
+    --gray-color-800: #f1f5f9;
+    --gray-color-900: #f8fafc;
+
+    --success-color-500: #34d399;
+    --success-color-50: #064e3b;
+    --danger-color-500: #f87171;
+    --danger-color-50: #7f1d1d;
+
+    /* Semantic */
+    --background-color: #0f172a;
+    --card-background-color: #1e293b;
+    --text-primary-color: var(--gray-color-900);
+    --text-secondary-color: var(--gray-color-500);
+    --border-color: #334155;
+}
