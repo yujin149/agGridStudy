@@ -11,7 +11,11 @@ function BasicGrid({ rowData }) {
 
     return (
         <div style={{ height: 400, width: '100%' }}>
-            <AgGridReact rowData={rowData} columnDefs={colDefs} />
+            <AgGridReact
+                rowData={rowData}
+                columnDefs={colDefs}
+                enableCellSpan={true}
+            />
         </div>
     )
 }

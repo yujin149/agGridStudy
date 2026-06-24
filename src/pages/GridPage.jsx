@@ -11,10 +11,16 @@ function GridPage() {
     const [currentPage, setCurrentPage] = useState(1)
     const totalPages = Math.max(1, Math.ceil(allData.length / PAGE_SIZE))
 
+    const sortedData = useMemo(() => {
+        return [...allData].sort((a, b) =>
+            a.department.localeCompare(b.department, 'ko')
+        )
+    }, [allData])
+
     const pagedRowData = useMemo(() => {
         const start = (currentPage - 1) * PAGE_SIZE
-        return allData.slice(start, start + PAGE_SIZE)
-    }, [allData, currentPage])
+        return sortedData.slice(start, start + PAGE_SIZE)
+    }, [sortedData, currentPage])
 
     return (
         <div className={styles.page}>
