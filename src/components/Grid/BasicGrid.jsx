@@ -15,6 +15,9 @@ function BasicGrid({ rowData }) {
                 rowData={rowData}
                 columnDefs={colDefs}
                 enableCellSpan={true}
+                getRowClass={(params) =>
+                    params.data?.isSummary ? 'summary-row' : ''
+                }
             />
         </div>
     )

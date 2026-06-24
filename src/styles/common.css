@@ -11,3 +11,9 @@ body {
     color:var(--text-secondary-color);
     background-color:var(--background-color);
 }
+
+/* AG Grid 합계 행 — 가로 병합된 금액 칸 */
+.summary-amount-cell {
+    font-weight: 600;
+    text-align: right;
+}
