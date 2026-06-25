@@ -4,6 +4,8 @@ export const colDefs = [
         headerName: '부서',
         sortable: true,
         sort: 'asc',
+        // sort / comparator는 BasicGrid에서 deptSort props로 덮어씀 (GridPage가 전체 정렬 담당)
+        /*
         comparator: (valueA, valueB, nodeA, nodeB) => {
             const a = valueA ?? ''
             const b = valueB ?? ''
@@ -13,7 +15,7 @@ export const colDefs = [
                 return summaryA - summaryB
             }
             return a.localeCompare(b, 'ko')
-        },
+        },*/
         spanRows: ({ valueA, valueB }) => valueA === valueB,
     },
     // 합계 행: name 1칸에 "개발팀 합계"

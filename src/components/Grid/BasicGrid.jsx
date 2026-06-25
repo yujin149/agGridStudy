@@ -1,13 +1,34 @@
-import { useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { AgGridReact } from 'ag-grid-react'
-/**
- * initialColDefs : colDefs.js에서 가져온 시작용 데이터 → useState에 한 번만 넣는 초기 값
- * 열 정의를 나중에 바꿀 계획이 없다면 useState도 없이 import만 써도 된다.
- **/
 import { colDefs as initialColDefs } from '../../data/colDefs.js'
+import { postSortSummaryLast } from '../../utils/postSortSummaryLast.js'
 
-function BasicGrid({ rowData }) {
-    const [colDefs] = useState(initialColDefs)
+function BasicGrid({ rowData, deptSort, onDeptSortChange }) {
+    const colDefs = useMemo(
+        () =>
+            initialColDefs.map((col) => {
+                if (col.field !== 'department') return col
+                return {
+                    ...col,
+                    sort: deptSort,
+                    comparator: () => 0,
+                }
+            }),
+        [deptSort]
+    )
+
+    const onSortChanged = useCallback(
+        (event) => {
+            const departmentCol = event.api
+                .getColumnState()
+                .find((c) => c.colId === 'department')
+            const nextSort = departmentCol?.sort
+            if (nextSort && nextSort !== deptSort) {
+                onDeptSortChange(nextSort)
+            }
+        },
+        [deptSort, onDeptSortChange]
+    )
 
     return (
         <div style={{ height: 400, width: '100%' }}>
@@ -18,6 +39,8 @@ function BasicGrid({ rowData }) {
                 getRowClass={(params) =>
                     params.data?.isSummary ? 'summary-row' : ''
                 }
+                postSortRows={postSortSummaryLast}
+                onSortChanged={onSortChanged}
             />
         </div>
     )
