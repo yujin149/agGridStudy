@@ -24,6 +24,11 @@
     color:var(--text-primary-color);
 }
 
+.gridWrap :global(.ag-row-hover),
+.gridWrap :global(.ag-row-focus){
+    background:var(--primary-color-50);
+}
+
 .gridWrap :global(.ag-sort-order) {
     display: none;
 }
