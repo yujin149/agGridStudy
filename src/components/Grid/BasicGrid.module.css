@@ -1,0 +1,83 @@
+.gridWrap {
+    border: 1px solid var(--gray-color-200);
+    background: var(--card-background-color);
+}
+
+/* 헤더 가운데 정렬 */
+.gridWrap :global(.ag-header-cell-label) {
+    justify-content: center;
+}
+
+/* 데이터 셀 / 헤더(.ag-header-cell) 제외, 모든 열 공통 글자색·가운데 정렬 */
+.gridWrap :global(.ag-cell) {
+    color: var(--text-secondary-color);
+    text-align: center;
+}
+
+/* 부서 열 */
+.gridWrap :global(.cell-dept) {
+    background-color: var(--primary-color-50);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 합계 행 — 라벨 셀 (이름: 합계 / 상태: 승인건 합계) */
+.gridWrap :global(.summary-row .ag-cell.summary-label-cell) {
+    background-color: var(--gray-color-200);
+}
+
+/* 합계 행 — 금액·사유 값 셀 */
+.gridWrap :global(.summary-row .ag-cell) {
+    background-color: var(--gray-color-100);
+    font-weight: 600;
+    color: var(--text-primary-color);
+}
+.gridWrap :global(.summary-amount-cell) {
+    text-align: right;
+    font-weight:600;
+    color:var(--text-primary-color);
+}
+
+/* 금액 열 오른쪽 정렬 */
+.gridWrap :global(.cell-amount) {
+    justify-content: flex-end;
+    padding-right: 1.2rem;
+    text-align: right;
+}
+
+/* 상태 뱃지 — StatusCellRenderer의 span class */
+.gridWrap :global(.status-done),
+.gridWrap :global(.status-pending),
+.gridWrap :global(.status-rejected) {
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.gridWrap :global(.status-done) {
+    color: var(--success-color-500);
+    background-color: var(--success-color-50);
+}
+
+.gridWrap :global(.status-pending) {
+    color: var(--gray-color-500);
+    background-color: var(--gray-color-100);
+}
+
+.gridWrap :global(.status-rejected) {
+    color: var(--danger-color-500);
+    background-color: var(--danger-color-50);
+}
+
+.gridWrap :global(.status-summary) {
+    font-weight: 600;
+    color: var(--text-primary-color);
+}
+.gridWrap :global(.summary-reason-cell) {
+    text-align: right;
+}

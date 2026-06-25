@@ -1,7 +1,11 @@
+import StatusCellRenderer from '../components/Grid/StatusCellRenderer.jsx'
+
 export const colDefs = [
     {
         field: 'department',
         headerName: '부서',
+        cellClass: 'cell-dept',
+        width: 120,
         sortable: true,
         sort: 'asc',
         // sort / comparator는 BasicGrid에서 deptSort props로 덮어씀 (GridPage가 전체 정렬 담당)
@@ -18,15 +22,21 @@ export const colDefs = [
         },*/
         spanRows: ({ valueA, valueB }) => valueA === valueB,
     },
-    // 합계 행: name 1칸에 "개발팀 합계"
-    { field: 'name', headerName: '이름' },
+    // 합계 행: name 열에 "합계"
     {
-        field: 'age',
-        headerName: '나이',
-        colSpan: (params) => (params.data?.isSummary ? 3 : 1),
+        field: 'name',
+        headerName: '이름',
+        width: 120,
+        cellClass: (params) => (params.data?.isSummary ? 'summary-label-cell' : ''),
+    },
+    {
+        field: 'usage',
+        headerName: '사용처',
+        width: 160,
+        colSpan: (params) => (params.data?.isSummary ? 2 : 1),
         valueGetter: (params) => {
             if (params.data?.isSummary) return params.data.amount
-            return params.data?.age
+            return params.data?.usage
         },
         valueFormatter: (params) => {
             if (params.data?.isSummary && params.value != null) {
@@ -36,6 +46,29 @@ export const colDefs = [
         },
         cellClass: (params) => (params.data?.isSummary ? 'summary-amount-cell' : ''),
     },
-    { field: 'amount', headerName: '금액', colSpan: (params) => (params.data?.isSummary ? 0 : 1) },
-    { field: 'status', headerName: '상태', colSpan: (params) => (params.data?.isSummary ? 0 : 1) },
+    {
+        field: 'amount',
+        headerName: '금액',
+        flex:1, minWidth:160,
+        colSpan: (params) => (params.data?.isSummary ? 0 : 1),
+        cellClass: 'cell-amount',
+        valueFormatter: (p) =>
+            p.value != null ? p.value.toLocaleString() + '원' : '-',
+    },
+    {
+        field: 'status',
+        headerName: '상태',
+        width: 120,
+        cellRenderer: StatusCellRenderer,
+        // 합계 행 "승인건 합계" — 셀 배경은 cellClass (span이 아님)
+        cellClass: (params) => (params.data?.isSummary ? 'summary-label-cell' : ''),
+    },
+    {
+        field: 'reason',
+        headerName: '사유',
+        flex: 1,
+        minWidth: 320,
+        // 합계 행도 표시 (colSpan: 0 이면 셀이 숨겨져 reason 값이 안 보임)
+        cellClass: (params) => (params.data?.isSummary ? 'summary-reason-cell' : ''),
+    },
 ]

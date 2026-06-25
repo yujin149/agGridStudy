@@ -1,0 +1,36 @@
+.page{
+    margin:0 auto;
+    padding:6rem 0;
+    width:92%;
+    max-width:100rem;
+}
+.title{
+    font-size:3rem;
+    color:var(--text-primary-color);
+}
+.textBox{
+    display: flex;
+    flex-direction: column;
+    gap:0.3rem;
+    margin:1rem 0;
+    padding:3rem;
+    border-radius: var(--radius-md);
+    background:var(--card-background-color);
+    box-shadow: var(--shadow-sm);
+}
+.textBox li{
+    position:relative;
+    padding-left:1.2rem;
+    font-size:1.4rem;
+}
+.textBox li:before{
+    content:'';
+    display: inline-block;
+    width:0.5rem;
+    height:0.5rem;
+    border-radius: 50%;
+    background:var(--gray-color-400);
+    position:absolute;
+    top:0.8rem;
+    left:0;
+}
