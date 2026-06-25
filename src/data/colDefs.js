@@ -29,12 +29,14 @@ export const colDefs = [
         field: 'name',
         headerName: '이름',
         width: 120,
+        sortable: true,
         cellClass: (params) => (params.data?.isSummary ? 'summary-label-cell' : ''),
     },
     {
         field: 'usage',
         headerName: '사용처',
         width: 160,
+        sortable: true,
         colSpan: (params) => (params.data?.isSummary ? 2 : 1),
         valueGetter: (params) => {
             if (params.data?.isSummary) return params.data.amount
@@ -52,6 +54,7 @@ export const colDefs = [
         field: 'amount',
         headerName: '금액',
         flex:1, minWidth:160,
+        sortable: true,
         colSpan: (params) => (params.data?.isSummary ? 0 : 1),
         cellClass: 'cell-amount',
         valueFormatter: (p) =>
@@ -61,6 +64,7 @@ export const colDefs = [
         field: 'status',
         headerName: '상태',
         width: 120,
+        sortable: true,
         cellRenderer: StatusCellRenderer,
         // 합계 행 "승인건 합계" — 셀 배경은 cellClass (span이 아님)
         cellClass: (params) => (params.data?.isSummary ? 'summary-label-cell' : ''),
@@ -70,6 +74,7 @@ export const colDefs = [
         headerName: '사유',
         flex: 1,
         minWidth: 320,
+        sortable: true,
         // 합계 행도 표시 (colSpan: 0 이면 셀이 숨겨져 reason 값이 안 보임)
         cellClass: (params) => (params.data?.isSummary ? 'summary-reason-cell' : ''),
     },

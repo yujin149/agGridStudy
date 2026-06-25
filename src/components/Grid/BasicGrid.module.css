@@ -24,6 +24,10 @@
     color:var(--text-primary-color);
 }
 
+.gridWrap :global(.ag-sort-order) {
+    display: none;
+}
+
 /* 합계 행 — 라벨 셀 (이름: 합계 / 상태: 승인건 합계) */
 .gridWrap :global(.summary-row .ag-cell.summary-label-cell) {
     background-color: var(--gray-color-200);

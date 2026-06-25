@@ -38,31 +38,58 @@ const gridTheme = themeQuartz.withParams({
     wrapperBorderRadius: 0,                             // 그리드 바깥 모서리 둥글기 (0 = 직각)
 })
 
-function BasicGrid({ rowData, deptSort, onDeptSortChange }) {
+function BasicGrid({
+                       rowData,
+                       deptSort,
+                       secondaryField,
+                       secondarySort,
+                       onSortChange,
+                       defaultColDef: defaultColDefProp,
+                   }) {
     const colDefs = useMemo(
         () =>
             initialColDefs.map((col) => {
-                if (col.field !== 'department') return col
-                return {
+                const def = {
                     ...col,
-                    sort: deptSort,
                     comparator: () => 0,
                 }
+                if (col.field === 'department') {
+                    def.sort = deptSort
+                } else if (col.field === secondaryField && secondarySort) {
+                    def.sort = secondarySort
+                } else {
+                    def.sort = null
+                }
+                return def
             }),
-        [deptSort]
+        [deptSort, secondaryField, secondarySort]
     )
 
     const onSortChanged = useCallback(
         (event) => {
-            const departmentCol = event.api
-                .getColumnState()
-                .find((c) => c.colId === 'department')
-            const nextSort = departmentCol?.sort
-            if (nextSort && nextSort !== deptSort) {
-                onDeptSortChange(nextSort)
+            const state = event.api.getColumnState()
+            const deptCol = state.find((c) => c.colId === 'department')
+            const secCol = state.find(
+                (c) => c.colId !== 'department' && c.sort != null
+            )
+            const updates = {}
+            if (deptCol?.sort && deptCol.sort !== deptSort) {
+                updates.deptSort = deptCol.sort
+            }
+            const nextField = secCol?.colId ?? null
+            const nextSort = secCol?.sort ?? null
+            if (
+                nextField !== secondaryField ||
+                nextSort !== secondarySort
+            ) {
+                updates.secondaryField = nextField
+                updates.secondarySort = nextSort
+            }
+            if (Object.keys(updates).length > 0) {
+                onSortChange(updates)
             }
         },
-        [deptSort, onDeptSortChange]
+        [deptSort, secondaryField, secondarySort, onSortChange]
     )
 
     return (
@@ -70,7 +97,10 @@ function BasicGrid({ rowData, deptSort, onDeptSortChange }) {
             <AgGridReact
                 theme={gridTheme}
                 rowData={rowData}
-                defaultColDef={{ suppressMovable: true }} // 전체 기본값 = 모든 열 위치 수정 불가
+                defaultColDef={{
+                    suppressMovable: true,      // 전체 기본값 = 모든 열 위치 수정 불가
+                    ...defaultColDefProp,
+                }}
                 columnDefs={colDefs}
                 enableCellSpan={true}
                 getRowClass={(params) =>
