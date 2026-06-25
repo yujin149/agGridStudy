@@ -4,6 +4,8 @@ export const colDefs = [
     {
         field: 'department',
         headerName: '부서',
+        pinned: 'left', // 왼쪽 고정
+        lockPinned: true,      // 사용자가 고정 해제 못 함
         cellClass: 'cell-dept',
         width: 120,
         sortable: true,

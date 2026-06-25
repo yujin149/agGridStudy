@@ -17,8 +17,18 @@ const gridTheme = themeQuartz.withParams({
     borderColor: 'var(--border-color)',                 // 셀·헤더 테두리 색
     foregroundColor: 'var(--text-primary-color)',       // 데이터 셀 글자색 (행 안의 텍스트 — 홍길동, 120000원, 승인완료 등)
     rowBorder: true,                                    // 행과 행 사이 가로 구분선
-    headerRowBorder: true,                              // 헤더 아래 구분선
-    columnBorder: true,                                 // 열과 열 사이 세로 구분선
+    headerRowBorder: {                                  // 헤더 아래 구분선
+        width: 3,
+        style: 'solid',
+        color: 'var(--border-color)',
+    },
+    columnBorder: true,
+    // 고정 열과 스크롤 영역 사이 세로선 (테마 API)
+    pinnedColumnBorder: {                               // 열과 열 사이 세로 구분선
+        width: 3,
+        style: 'solid',
+        color: 'var(--border-color)',
+    },
     fontFamily: 'var(--font-family)',                   // 데이터 셀 폰트 (헤더·본문 공통 기본)
     fontSize: 14,                                       // 데이터 셀 글자 크기 (px)
     headerFontSize: 14,                                 // 헤더 글자 크기 (px)
@@ -60,6 +70,7 @@ function BasicGrid({ rowData, deptSort, onDeptSortChange }) {
             <AgGridReact
                 theme={gridTheme}
                 rowData={rowData}
+                defaultColDef={{ suppressMovable: true }} // 전체 기본값 = 모든 열 위치 수정 불가
                 columnDefs={colDefs}
                 enableCellSpan={true}
                 getRowClass={(params) =>
