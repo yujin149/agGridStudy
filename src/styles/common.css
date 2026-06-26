@@ -31,3 +31,38 @@ select {
 select::-ms-expand {
     display: none;
 }
+
+/* button */
+button.commBtn{
+    height:4rem;
+    padding:0 1.6rem;
+    background:var(--card-background-color);
+    border:1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color:var(--text-secondary-color);
+    font-weight:500;
+}
+button.commBtn:hover{
+    background:var(--gray-color-100);
+}
+
+button.primaryBtn{
+    background:var(--primary-color-500);
+    border-color:var(--primary-color-500);
+    color:var(--card-background-color);
+}
+button.primaryBtn:hover{
+    background:var(--primary-color-600);
+    border-color:var(--primary-color-600);
+}
+
+button.downBtn{
+    background:var(--card-background-color) url("../assets/images/ico-download.svg") left 1.6rem center no-repeat;
+    background-size:1.5rem;
+    padding-left:3.7rem;
+}
+button.downBtn:hover{
+    background:var(--gray-color-100) url("../assets/images/ico-download.svg") left 1.6rem center no-repeat;
+    background-size:1.5rem;
+}

@@ -8,6 +8,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    gap:1rem;
 }
 
 .totalNm{
@@ -20,7 +21,24 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    gap:1.6rem;
 }
+
+.buttonWrap{
+    display: flex;
+    align-items: center;
+    gap:1rem;
+}
+
+.buttonWrap:after{
+    content:'';
+    display: block;
+    width:1px;
+    height:3rem;
+    background:var(--border-color);
+    margin-left:0.6rem;
+}
+
 .gridPageSize{
     width:10rem;
 }

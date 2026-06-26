@@ -61,9 +61,15 @@ function GridPage() {
             <GridInfo totalCount={dataRowCount}
                 pageSize={pageSize}
                 onPageSizeChange={(size) => {
-                  setPageSize(size)
-                  setCurrentPage(1)
+                    setPageSize(size)
+                    setCurrentPage(1)
                 }}
+                buttonWrap={
+                    <>
+                        <button type="button" className={`primaryBtn commBtn ${styles.editBtn}`}>편집</button>
+                        <button type="button" className={`commBtn downBtn ${styles.excelBtn}`}>엑셀 다운로드</button>
+                    </>
+                }
             />
             <BasicGrid
                 defaultColDef={{
