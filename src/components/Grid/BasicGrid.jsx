@@ -39,13 +39,13 @@ const gridTheme = themeQuartz.withParams({
 })
 
 function BasicGrid({
-                       rowData,
-                       deptSort,
-                       secondaryField,
-                       secondarySort,
-                       onSortChange,
-                       defaultColDef: defaultColDefProp,
-                   }) {
+       rowData,
+       deptSort,
+       secondaryField,
+       secondarySort,
+       onSortChange,
+       defaultColDef: defaultColDefProp,
+   }) {
     const colDefs = useMemo(
         () =>
             initialColDefs.map((col) => {

@@ -36,7 +36,7 @@ export const colDefs = [
         field: 'usage',
         headerName: '사용처',
         width: 160,
-        sortable: true,
+        sortable: false,
         colSpan: (params) => (params.data?.isSummary ? 2 : 1),
         valueGetter: (params) => {
             if (params.data?.isSummary) return params.data.amount
@@ -74,7 +74,7 @@ export const colDefs = [
         headerName: '사유',
         flex: 1,
         minWidth: 320,
-        sortable: true,
+        sortable: false,
         // 합계 행도 표시 (colSpan: 0 이면 셀이 숨겨져 reason 값이 안 보임)
         cellClass: (params) => (params.data?.isSummary ? 'summary-reason-cell' : ''),
     },
