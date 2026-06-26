@@ -9,7 +9,8 @@ import { sortEmployees } from '../utils/sortEmployees.js'
 import styles from './GridPage.module.css'
 
 function GridPage() {
-    const [allData] = useState(rowDataJson)
+    const [allData, setAllData] = useState(rowDataJson)
+    const [isEditing, setIsEditing] = useState(false)
     const [pageSize, setPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
     // 부서 정렬 방향 : GridPage에서 전체 데이터를 정렬한 뒤 페이지를 자름
@@ -43,6 +44,23 @@ function GridPage() {
         exportEmployeesExcel(sortedData)
     }, [sortedData])
 
+    const handleCellEdit = useCallback((id, field, value) => {
+        setAllData((prev) =>
+            prev.map((row) => {
+                if (row.id !== id) return row
+                const updated = { ...row, [field]: value }
+                if (field === 'status' && value !== '반려') {
+                    updated.reason = '-'
+                }
+                return updated
+            })
+        )
+    }, [])
+
+    const handleEditToggle = useCallback(() => {
+        setIsEditing((prev) => !prev)
+    }, [])
+
     // 합계 행 포함된 전체 행 수 기준 (30 + 부서별 합계 4 = 34행 → 4페이지)
     const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize))
 
@@ -71,8 +89,10 @@ function GridPage() {
                 }}
                 buttonWrap={
                     <>
-                        <button type="button" className={`primaryBtn commBtn ${styles.editBtn}`}>편집</button>
-                        <button type="button" className={`commBtn downBtn ${styles.excelBtn}`} onClick={handleExcelDownload}>엑셀 다운로드</button>
+                        <button type="button" className="commBtn primaryBtn" onClick={handleEditToggle}>
+                            {isEditing ? '저장' : '편집'}
+                        </button>
+                        <button type="button" className="commBtn downBtn" onClick={handleExcelDownload}>엑셀 다운로드</button>
                     </>
                 }
             />
@@ -81,6 +101,8 @@ function GridPage() {
                     resizable: true, // 사용자가 넓이를 드래그로 조절
                 }}
                 rowData={pagedRowData}
+                isEditing={isEditing}
+                onCellEdit={handleCellEdit}
                 deptSort={deptSort}
                 secondaryField={secondaryField}
                 secondarySort={secondarySort}
