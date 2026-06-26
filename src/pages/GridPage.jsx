@@ -4,6 +4,7 @@ import GridInfo from '../components/Grid/GridInfo.jsx'
 import Pagination from '../components/Pagination/Pagination.jsx'
 import rowDataJson from '../data/rowData.json'
 import { addDepartmentSubtotals } from '../utils/addDepartmentSubtotals.js'
+import { exportEmployeesExcel } from '../utils/exportEmployeesExcel.js'
 import { sortEmployees } from '../utils/sortEmployees.js'
 import styles from './GridPage.module.css'
 
@@ -38,6 +39,10 @@ function GridPage() {
         setCurrentPage(1)
     }, [])
 
+    const handleExcelDownload = useCallback(() => {
+        exportEmployeesExcel(sortedData)
+    }, [sortedData])
+
     // 합계 행 포함된 전체 행 수 기준 (30 + 부서별 합계 4 = 34행 → 4페이지)
     const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize))
 
@@ -67,7 +72,7 @@ function GridPage() {
                 buttonWrap={
                     <>
                         <button type="button" className={`primaryBtn commBtn ${styles.editBtn}`}>편집</button>
-                        <button type="button" className={`commBtn downBtn ${styles.excelBtn}`}>엑셀 다운로드</button>
+                        <button type="button" className={`commBtn downBtn ${styles.excelBtn}`} onClick={handleExcelDownload}>엑셀 다운로드</button>
                     </>
                 }
             />
