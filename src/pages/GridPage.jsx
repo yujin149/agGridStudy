@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import BasicGrid from '../components/Grid/BasicGrid.jsx'
+import EmployeeGrid from '../components/Grid/EmployeeGrid.jsx'
 import GridInfo from '../components/Grid/GridInfo.jsx'
 import Pagination from '../components/Pagination/Pagination.jsx'
 import rowDataJson from '../data/rowData.json'
@@ -96,7 +96,7 @@ function GridPage() {
                     </>
                 }
             />
-            <BasicGrid
+            <EmployeeGrid
                 defaultColDef={{
                     resizable: true, // 사용자가 넓이를 드래그로 조절
                 }}

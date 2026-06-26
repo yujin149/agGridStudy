@@ -1,6 +1,7 @@
 import StatusCellRenderer from '../components/Grid/StatusCellRenderer.jsx'
 
-export const colDefs = [
+/** 경비(직원) 그리드 전용 columnDefs — 다른 표는 별도 xxxColDefs.js 로 분리 */
+export const employeeColDefs = [
     {
         field: 'department',
         headerName: '부서',
@@ -10,7 +11,7 @@ export const colDefs = [
         width: 120,
         sortable: true,
         sort: 'asc',
-        // sort / comparator는 BasicGrid에서 deptSort props로 덮어씀 (GridPage가 전체 정렬 담당)
+        // sort / comparator는 EmployeeGrid에서 deptSort props로 덮어씀 (GridPage가 전체 정렬 담당)
         /*
         comparator: (valueA, valueB, nodeA, nodeB) => {
             const a = valueA ?? ''

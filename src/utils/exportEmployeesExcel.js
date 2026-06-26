@@ -83,7 +83,7 @@ function formatAmount(value) {
 // rowIndex === 0 일 때만 부서명 표시 → 나머지는 빈칸 (세로 병합용)
 function getRowValues(row, rowIndex) {
     if (row.isSummary) {
-        // 합계 행 - colDefs.js의 valueGetter / colSpan 규칙과 맞춤
+        // 합계 행 - employeeColDefs.js의 valueGetter / colSpan 규칙과 맞춤
         return [
             rowIndex === 0 ? row.department : '', // 부서 (병합 시 첫 행만)
             row.name,                             // '합계'
