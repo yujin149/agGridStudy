@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useState } from 'react'
 import BasicGrid from '../components/Grid/BasicGrid.jsx'
+import GridInfo from '../components/Grid/GridInfo.jsx'
 import Pagination from '../components/Pagination/Pagination.jsx'
 import rowDataJson from '../data/rowData.json'
 import { addDepartmentSubtotals } from '../utils/addDepartmentSubtotals.js'
 import { sortEmployees } from '../utils/sortEmployees.js'
 import styles from './GridPage.module.css'
 
-const PAGE_SIZE = 10
-
 function GridPage() {
     const [allData] = useState(rowDataJson)
+    const [pageSize, setPageSize] = useState(10)
     const [currentPage, setCurrentPage] = useState(1)
     // 부서 정렬 방향 : GridPage에서 전체 데이터를 정렬한 뒤 페이지를 자름
     const [deptSort, setDeptSort] = useState('asc')
@@ -26,6 +26,11 @@ function GridPage() {
         return addDepartmentSubtotals(sorted)
     }, [allData, deptSort, secondaryField, secondarySort])
 
+    const dataRowCount = useMemo(   // 총 건수
+        () => sortedData.filter((row) => !row.isSummary).length,
+        [sortedData],
+    )
+
     const handleSortChange = useCallback((updates) => {
         if (updates.deptSort) setDeptSort(updates.deptSort)
         if ('secondaryField' in updates) setScondaryField(updates.secondaryField)
@@ -34,12 +39,12 @@ function GridPage() {
     }, [])
 
     // 합계 행 포함된 전체 행 수 기준 (30 + 부서별 합계 4 = 34행 → 4페이지)
-    const totalPages = Math.max(1, Math.ceil(sortedData.length / PAGE_SIZE))
+    const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize))
 
     const pagedRowData = useMemo(() => {
-        const start = (currentPage - 1) * PAGE_SIZE
-        return sortedData.slice(start, start + PAGE_SIZE)
-    }, [sortedData, currentPage])
+        const start = (currentPage - 1) * pageSize
+        return sortedData.slice(start, start + pageSize)
+    }, [sortedData, currentPage, pageSize])
 
     return (
         <div className={styles.page}>
@@ -53,6 +58,13 @@ function GridPage() {
                 <li>합계 행 부서 그룹 맨 아래 고정 (postSortRows)</li>
                 <li>커스텀 Pagination 연동 (PAGE_SIZE 10, 합계 행 포함 총 페이지 계산)</li>
             </ul>
+            <GridInfo totalCount={dataRowCount}
+                pageSize={pageSize}
+                onPageSizeChange={(size) => {
+                  setPageSize(size)
+                  setCurrentPage(1)
+                }}
+            />
             <BasicGrid
                 defaultColDef={{
                     resizable: true, // 사용자가 넓이를 드래그로 조절

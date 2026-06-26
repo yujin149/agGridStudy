@@ -12,3 +12,22 @@ body {
     background-color:var(--background-color);
 }
 
+/* select */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 1px solid var(--border-color);
+    padding: 0 3rem 0 1rem;
+    height: 4rem;
+    border-radius: var(--radius-sm);
+    background:var(--card-background-color) url('../assets/images/ico-arrow.svg') no-repeat right 1rem center ;
+    background-size: 0.8rem;
+    cursor: pointer;
+    color:var(--text-secondary-color);
+    font-weight: 500;
+}
+
+select::-ms-expand {
+    display: none;
+}

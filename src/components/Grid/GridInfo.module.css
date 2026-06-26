@@ -1,0 +1,26 @@
+.gridInfo{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin:2rem 0 1rem;
+}
+.leftBox{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.totalNm{
+    font-size:1.4rem;
+    color:var(--gray-color-400);
+    font-weight:500;
+}
+
+.rightBox{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.gridPageSize{
+    width:10rem;
+}
