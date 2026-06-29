@@ -1,4 +1,10 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
+import {
+    findFirstMissingRejectReasonId,
+    hasMissingRejectReason,
+    REJECT_REASON_REQUIRED_MSG,
+    SAVE_CONFIRM_MSG,
+} from '../components/Grid/reasonConfig.js'
 import EmployeeGrid from '../components/Grid/EmployeeGrid.jsx'
 import GridInfo from '../components/Grid/GridInfo.jsx'
 import Pagination from '../components/Pagination/Pagination.jsx'
@@ -21,6 +27,7 @@ function GridPage() {
     const [secondarySort, setSecondarySort] = useState(null)
     const editExitCancelRef = useRef(false) // true: 취소로 편집 종료, false: 저장으로 종료
     const gridControlRef = useRef(null)     // GridPage에서 AG Grid stopEditing API 호출용
+    const draftDataRef = useRef(null)       // 저장 직전 stopEditing 후 최신 draft 동기 참조
 
     // 편집 중이면 draftData, 아니면 확정 데이터(allData)를 그리드에 표시
     const sourceData = isEditing && draftData != null ? draftData : allData
@@ -53,42 +60,78 @@ function GridPage() {
         exportEmployeesExcel(sortedData)
     }, [sortedData])
 
-    // 셀 값 변경 → draftData(임시)만 수정. status가 반려가 아니면 reason 초기화
+    // 셀 값 변경 → draftData(임시)만 수정. 반려 선택 시 reason '-' 제거, 그 외 status는 reason '-'
     const handleCellEdit = useCallback((id, field, value) => {
         setDraftData((prev) => {
             if (!prev) return prev
-            return prev.map((row) => {
+            const next = prev.map((row) => {
                 if (row.id !== id) return row
                 const updated = { ...row, [field]: value }
-                if (field === 'status' && value !== '반려') {
-                    updated.reason = '-'
+                if (field === 'status') {
+                    if (value === '반려') {
+                        if (!updated.reason || updated.reason === '-') {
+                            updated.reason = ''
+                        }
+                    } else {
+                        updated.reason = '-'
+                    }
                 }
                 return updated
             })
+            draftDataRef.current = next
+            return next
         })
     }, [])
 
     // 편집 시작: allData 복사 → draftData 생성, 편집 모드 ON
     const handleEditStart = useCallback(() => {
-        setDraftData(allData.map((row) => ({ ...row })))
+        const draft = allData.map((row) => ({ ...row }))
+        draftDataRef.current = draft
+        setDraftData(draft)
         setIsEditing(true)
     }, [allData])
 
-    // 저장: draftData → allData 확정 후 편집 모드 OFF (DB 연동 시 API 호출 위치)
+    // 저장: 반려 사유 검증 → 확인 alert → draftData → allData 확정
     const handleSave = useCallback(() => {
-        editExitCancelRef.current = false
-        if (draftData != null) {
-            setAllData(draftData)
+        gridControlRef.current?.stopEditing(false)
+
+        const data = draftDataRef.current
+        if (data == null) return
+
+        if (hasMissingRejectReason(data)) {
+            alert(REJECT_REASON_REQUIRED_MSG)
+
+            const invalidId = findFirstMissingRejectReasonId(data)
+            if (invalidId != null) {
+                const rowIndexInSorted = sortedData.findIndex((r) => r.id === invalidId)
+                if (rowIndexInSorted >= 0) {
+                    const targetPage = Math.floor(rowIndexInSorted / pageSize) + 1
+                    if (targetPage !== currentPage) {
+                        setCurrentPage(targetPage)
+                    }
+                }
+                gridControlRef.current?.scheduleReasonFocus?.(invalidId)
+            }
+            return
         }
+
+        if (!window.confirm(SAVE_CONFIRM_MSG)) {
+            return
+        }
+
+        editExitCancelRef.current = false
+        setAllData(data)
         setDraftData(null)
+        draftDataRef.current = null
         setIsEditing(false)
-    }, [draftData])
+    }, [sortedData, currentPage, pageSize])
 
     // 취소: 입력 중인 셀 편집 버림(stopEditing true) + draftData 폐기 → allData로 복귀
     const handleCancel = useCallback(() => {
         editExitCancelRef.current = true
         gridControlRef.current?.stopEditing(true)
         setDraftData(null)
+        draftDataRef.current = null
         setIsEditing(false)
     }, [])
 

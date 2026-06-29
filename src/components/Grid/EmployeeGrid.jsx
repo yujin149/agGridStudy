@@ -4,6 +4,7 @@ import { employeeColDefs } from '../../data/employeeColDefs.js'
 import { postSortSummaryLast } from '../../utils/postSortSummaryLast.js'
 import StatusCellEditor from './StatusCellEditor.jsx'
 import StatusCellEditRenderer from './StatusCellEditRenderer.jsx'
+import ReasonCellEditor from './ReasonCellEditor.jsx'
 
 /**
  * 경비(직원) 표 전용 그리드 — employeeColDefs·부서 정렬·합계 행·편집 등
@@ -22,6 +23,38 @@ function EmployeeGrid({
 }) {
     const gridRef = useRef(null)
     const statusCellWasEditingRef = useRef(false) // 상태 셀 재클릭 닫기용 - mousedown 시점 편집 여부
+    const pendingReasonEditIdRef = useRef(null) // 사유 셀 자동 focus 대기 id (반려 변경·저장 검증 실패)
+
+    // id에 해당하는 사유 셀 편집 시작 - 성공 시 pending 해제
+    const focusReasonCellById = useCallback((id) => {
+        const api = gridRef.current?.api
+        if (!api || id == null) return false
+
+        const rowNode = api.getRowNode(String(id))
+        if (!rowNode || rowNode.data?.status !== '반려' || rowNode.data?.isSummary) {
+            return false
+        }
+
+        api.ensureIndexVisible(rowNode.rowIndex)
+        api.startEditingCell({
+            rowIndex: rowNode.rowIndex,
+            colKey: 'reason',
+        })
+        pendingReasonEditIdRef.current = null
+        return true
+    }, [])
+
+    // alert 닫힌 뒤 그리드 준비될 때까지 재시도 (같은 페이지·페이지 이동 모두)
+    const scheduleReasonFocus = useCallback(
+        (id) => {
+            pendingReasonEditIdRef.current = id
+            const tryFocus = () => focusReasonCellById(id)
+            setTimeout(tryFocus, 0)
+            setTimeout(tryFocus, 50)
+            setTimeout(tryFocus, 150)
+        },
+        [focusReasonCellById],
+    )
 
     // 해당 행·status 열이 현재 편집(드롭다운 열림) 중인지 확인
     const isStatusCellEditing = useCallback((api, rowIndex) => {
@@ -58,13 +91,14 @@ function EmployeeGrid({
         [isEditing],
     )
 
-    // GridPage에서 stopEditing 호출할 수 있도록 API 노출
+    // GridPage에서 stopEditing·사유 셀 focus 호출용 API 노출
     useEffect(() => {
         if (!gridControlRef) return
         gridControlRef.current = {
             stopEditing: (cancel) => gridRef.current?.api?.stopEditing(cancel),
+            scheduleReasonFocus,
         }
-    })
+    }, [gridControlRef, scheduleReasonFocus])
 
     // 편집 모드 종료 시 활성 셀 편집 종료. cancel=true면 값 커밋 없이 닫음
     useEffect(() => {
@@ -76,6 +110,16 @@ function EmployeeGrid({
             }
         }
     }, [isEditing, editExitCancelRef])
+
+    // pendingReasonEditIdRef - rowData 갱신(페이지 이동·반려 변경) 후 사유 셀 편집 시작
+    useEffect(() => {
+        const id = pendingReasonEditIdRef.current
+        if (id == null || !isEditing) return
+
+        focusReasonCellById(id)
+        const t = setTimeout(() => focusReasonCellById(id), 0)
+        return () => clearTimeout(t)
+    }, [rowData, isEditing, focusReasonCellById])
 
     // isEditing에 따라 편집 가능 열·에디터 설정 (status: 뱃지 드롭다운, reason: 텍스트)
     const columnDefs = useMemo(
@@ -108,7 +152,7 @@ function EmployeeGrid({
                 if (isEditing && col.field === 'reason') {
                     def.editable = (params) =>
                         !params.data?.isSummary && params.data?.status === '반려'
-                    def.cellEditor = 'agTextCellEditor'
+                    def.cellEditor = ReasonCellEditor // placeholder (사유 필수 검증은 저장 시)
                     def.singleClickEdit = true
                 }
 
@@ -152,8 +196,13 @@ function EmployeeGrid({
             if (event.data?.id == null) return
 
             onCellEdit?.(event.data.id, event.colDef.field, event.newValue)
+
+            // 반려 선택 시 draft 반영 후 사유 셀로 자동 focus
+            if (event.colDef.field === 'status' && event.newValue === '반려') {
+                scheduleReasonFocus(event.data.id)
+            }
         },
-        [onCellEdit],
+        [onCellEdit, scheduleReasonFocus],
     )
 
     // 행 고유 ID — 합계 행은 summary-{부서}, 일반 행은 id
