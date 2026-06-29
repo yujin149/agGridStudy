@@ -88,6 +88,28 @@
     font-weight: 600;
     color: var(--text-primary-color);
 }
+
+.gridWrap :global(.status-editable-cell) {
+    cursor: pointer;
+}
+
+.gridWrap :global(.status-cell-edit) {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gridWrap :global(.status-cell-arrow) {
+    position: absolute;
+    right: 0.6rem;
+    width: 0.7rem;
+    height: auto;
+    pointer-events: none;
+}
+
 .gridWrap :global(.summary-reason-cell) {
     text-align: right;
 }

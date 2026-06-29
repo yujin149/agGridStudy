@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import BasicGrid from './BasicGrid.jsx'
 import { employeeColDefs } from '../../data/employeeColDefs.js'
 import { postSortSummaryLast } from '../../utils/postSortSummaryLast.js'
-
-const STATUS_OPTIONS = ['승인대기', '승인완료', '반려']
+import StatusCellEditor from './StatusCellEditor.jsx'
+import StatusCellEditRenderer from './StatusCellEditRenderer.jsx'
 
 /**
  * 경비(직원) 표 전용 그리드 — employeeColDefs·부서 정렬·합계 행·편집 등
@@ -21,6 +21,42 @@ function EmployeeGrid({
     gridControlRef,
 }) {
     const gridRef = useRef(null)
+    const statusCellWasEditingRef = useRef(false) // 상태 셀 재클릭 닫기용 - mousedown 시점 편집 여부
+
+    // 해당 행·status 열이 현재 편집(드롭다운 열림) 중인지 확인
+    const isStatusCellEditing = useCallback((api, rowIndex) => {
+        return (api.getEditingCells?.() ?? []).some(
+            (cell) =>
+                cell.rowIndex === rowIndex && cell.column?.getColId() === 'status',
+        )
+    }, [])
+
+    // 상태 셀 재클릭 시 드롭다운 닫기 - mousedown 시점에 이미 편집 중인지 기록
+    const onCellMouseDown = useCallback(
+        (event) => {
+            if (!isEditing || event.colDef.field !== 'status' || event.data?.isSummary) {
+                return
+            }
+            statusCellWasEditingRef.current = isStatusCellEditing(
+                event.api,
+                event.rowIndex,
+            )
+        },
+        [isEditing, isStatusCellEditing],
+    )
+
+    // 상태 셀 재클릭 시 드롭다운 닫기 - click 시점에 편집 중이었으면 stopEditing
+    const onCellClicked = useCallback(
+        (event) => {
+            if (!isEditing || event.colDef.field !== 'status' || event.data?.isSummary) {
+                return
+            }
+            if (statusCellWasEditingRef.current) {
+                event.api.stopEditing()
+            }
+        },
+        [isEditing],
+    )
 
     // GridPage에서 stopEditing 호출할 수 있도록 API 노출
     useEffect(() => {
@@ -41,7 +77,7 @@ function EmployeeGrid({
         }
     }, [isEditing, editExitCancelRef])
 
-    // isEditing에 따라 편집 가능 열·에디터 설정 (status: 드롭다운, reason: 텍스트)
+    // isEditing에 따라 편집 가능 열·에디터 설정 (status: 뱃지 드롭다운, reason: 텍스트)
     const columnDefs = useMemo(
         () =>
             employeeColDefs.map((col) => {
@@ -59,10 +95,13 @@ function EmployeeGrid({
                 }
 
                 if (isEditing && col.field === 'status') {
-                    def.cellRenderer = undefined
+                    def.cellRenderer = StatusCellEditRenderer // 편집 모드 셀: 뱃지 + 화살표
+                    def.cellClass = (params) =>
+                        params.data?.isSummary ? 'summary-label-cell' : 'status-editable-cell' // pointer
                     def.editable = (params) => !params.data?.isSummary
-                    def.cellEditor = 'agSelectCellEditor'
-                    def.cellEditorParams = { values: STATUS_OPTIONS }
+                    def.cellEditor = StatusCellEditor // 클릭 시 뱃지 드롭다운 팝업
+                    def.cellEditorPopup = true // 셀 아래 팝업 (셀 크기에 가리지 않음)
+                    def.cellEditorPopupPosition = 'under'
                     def.singleClickEdit = true
                 }
 
@@ -143,6 +182,9 @@ function EmployeeGrid({
             getRowId={getRowId}
             onSortChanged={onSortChanged}
             onCellValueChanged={onCellValueChanged}
+            onCellMouseDown={onCellMouseDown}
+            onCellClicked={onCellClicked}
+            stopEditingWhenCellsLoseFocus={isEditing} // 편집 모드: 목록 바깥 클릭 시 드롭다운 닫기
         />
     )
 }

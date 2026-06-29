@@ -46,6 +46,9 @@ const BasicGrid = forwardRef(function BasicGrid(
         getRowId,
         onSortChanged,
         onCellValueChanged,
+        onCellMouseDown, // 셀 mousedown (상태 드롭다운 재클릭 닫기용)
+        onCellClicked, // 셀 click (상태 드롭다운 재클릭 닫기용)
+        stopEditingWhenCellsLoseFocus = false, // true: 포커스 이탈 시 편집 종료
     },
     ref,
 ) {
@@ -70,6 +73,9 @@ const BasicGrid = forwardRef(function BasicGrid(
                 postSortRows={postSortRows}
                 onSortChanged={onSortChanged}
                 onCellValueChanged={onCellValueChanged}
+                onCellMouseDown={onCellMouseDown}
+                onCellClicked={onCellClicked}
+                stopEditingWhenCellsLoseFocus={stopEditingWhenCellsLoseFocus}
             />
         </div>
     )
