@@ -17,15 +17,31 @@ function EmployeeGrid({
     isEditing = false,
     onCellEdit,
     defaultColDef,
+    editExitCancelRef,
+    gridControlRef,
 }) {
     const gridRef = useRef(null)
 
+    // GridPage에서 stopEditing 호출할 수 있도록 API 노출
+    useEffect(() => {
+        if (!gridControlRef) return
+        gridControlRef.current = {
+            stopEditing: (cancel) => gridRef.current?.api?.stopEditing(cancel),
+        }
+    })
+
+    // 편집 모드 종료 시 활성 셀 편집 종료. cancel=true면 값 커밋 없이 닫음
     useEffect(() => {
         if (!isEditing) {
-            gridRef.current?.api?.stopEditing()
+            const cancel = editExitCancelRef?.current ?? false
+            gridRef.current?.api?.stopEditing(cancel)
+            if (editExitCancelRef) {
+                editExitCancelRef.current = false
+            }
         }
-    }, [isEditing])
+    }, [isEditing, editExitCancelRef])
 
+    // isEditing에 따라 편집 가능 열·에디터 설정 (status: 드롭다운, reason: 텍스트)
     const columnDefs = useMemo(
         () =>
             employeeColDefs.map((col) => {
@@ -62,6 +78,7 @@ function EmployeeGrid({
         [deptSort, secondaryField, secondarySort, isEditing],
     )
 
+    // AG Grid 정렬 이벤트 → GridPage의 deptSort / secondaryField·Sort 로 전달
     const onSortChanged = useCallback(
         (event) => {
             const state = event.api.getColumnState()
@@ -89,6 +106,7 @@ function EmployeeGrid({
         [deptSort, secondaryField, secondarySort, onSortChange],
     )
 
+    // 셀 값 변경 완료 → GridPage handleCellEdit 호출 (합계 행·동일 값 제외)
     const onCellValueChanged = useCallback(
         (event) => {
             if (event.data?.isSummary || event.newValue === event.oldValue) return
@@ -99,6 +117,7 @@ function EmployeeGrid({
         [onCellEdit],
     )
 
+    // 행 고유 ID — 합계 행은 summary-{부서}, 일반 행은 id
     const getRowId = useCallback((params) => {
         if (params.data?.isSummary) {
             return `summary-${params.data.department}`
@@ -106,6 +125,7 @@ function EmployeeGrid({
         return String(params.data.id)
     }, [])
 
+    // 합계 행에 summary-row CSS 클래스 적용
     const getRowClass = useCallback(
         (params) => (params.data?.isSummary ? 'summary-row' : ''),
         [],

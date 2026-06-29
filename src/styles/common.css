@@ -57,6 +57,15 @@ button.primaryBtn:hover{
     border-color:var(--primary-color-600);
 }
 
+button.primaryLineBtn{
+    background:var(--card-background-color);
+    border:1px solid var(--primary-color-500);
+    color:var(--primary-color-500);
+}
+button.primaryLineBtn:hover{
+    background:var(--primary-color-50);
+}
+
 button.downBtn{
     background:var(--card-background-color) url("../assets/images/ico-download.svg") left 1.6rem center no-repeat;
     background-size:1.5rem;
