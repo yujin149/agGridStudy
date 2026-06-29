@@ -7,7 +7,9 @@ import StatusCellEditRenderer from './StatusCellEditRenderer.jsx'
 import ReasonCellEditor from './ReasonCellEditor.jsx'
 
 /**
- * 경비(직원) 표 전용 그리드 — employeeColDefs·부서 정렬·합계 행·편집 등
+ * 경비(직원) 표 전용 그리드
+ * - employeeColDefs·부서/2차 정렬·합계 행·편집(상태 드롭다운·반려 사유)
+ * - GridPage draft 연동·scheduleReasonFocus
  */
 function EmployeeGrid({
     rowData,

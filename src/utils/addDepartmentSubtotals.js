@@ -1,3 +1,4 @@
+/** 부서별 그룹 맨 아래 합계 행(isSummary) 삽입 */
 export function addDepartmentSubtotals(rows) {
     const result = []
     let i = 0

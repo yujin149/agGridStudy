@@ -291,6 +291,7 @@ function downloadWorkbook(workbook, fileName) {
     })
 }
 
+/** 정렬·합계 행 포함 sortedData를 엑셀(.xlsx) 파일로 다운로드 */
 export function exportEmployeesExcel(sortedData, fileName = '경비내역.xlsx') {
     const groups = groupByDepartment(sortedData)
     const workbook = new ExcelJS.Workbook()

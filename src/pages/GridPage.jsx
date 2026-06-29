@@ -14,6 +14,7 @@ import { exportEmployeesExcel } from '../utils/exportEmployeesExcel.js'
 import { sortEmployees } from '../utils/sortEmployees.js'
 import styles from './GridPage.module.css'
 
+/** AG Grid 페이지 - 데이터·정렬·페이지·편집(draft)·엑셀 다운로드 */
 function GridPage() {
     const [allData, setAllData] = useState(rowDataJson)   // 확정 데이터 (저장 후 반영)
     const [draftData, setDraftData] = useState(null)     // 편집 중 임시 데이터 (취소 시 폐기)
@@ -155,12 +156,18 @@ function GridPage() {
                 <li>부서 1차 정렬 + 다른 열 2차 정렬 (부서 그룹 내)</li>
                 <li>합계 행 부서 그룹 맨 아래 고정 (postSortRows)</li>
                 <li>커스텀 Pagination 연동 (PAGE_SIZE 10, 합계 행 포함 총 페이지 계산)</li>
+                <li>편집 모드 Draft 패턴 (draftData / allData, 편집·저장·취소)</li>
+                <li>상태 커스텀 뱃지 드롭다운 (StatusCellEditor / StatusCellEditRenderer)</li>
+                <li>반려 시 사유 입력 (ReasonCellEditor, placeholder, 반려 선택 후 자동 focus)</li>
+                <li>저장 시 반려 사유 필수 검증 alert + 저장 confirm</li>
+                <li>검증 실패 시 해당 사유 셀 focus 이동 (scheduleReasonFocus)</li>
+                <li>엑셀 다운로드 (exportEmployeesExcel)</li>
             </ul>
             <GridInfo totalCount={dataRowCount}
                 pageSize={pageSize}
                 onPageSizeChange={(size) => {
-                    setPageSize(size)
-                    setCurrentPage(1)
+                    setPageSize(size)       // 페이지당 행 수 변경
+                    setCurrentPage(1)       // 1페이지로 초기화
                 }}
                 buttonWrap={
                     <>

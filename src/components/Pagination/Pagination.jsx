@@ -4,16 +4,18 @@ import icoPrev from '../../assets/images/ico-prev.svg'
 import icoNext from '../../assets/images/ico-next.svg'
 import icoLast from '../../assets/images/ico-last.svg'
 
-function Pagination({ currentPage, totalPages, onPageChange }){
-    const safeTotalPages = Math.max(1, totalPages)  // totalPage가 0일때 최소 1이 되도록
+/** 페이지 번호·이전/다음·처음/끝 네비게이션 */
+function Pagination({ currentPage, totalPages, onPageChange }) {
+    const safeTotalPages = Math.max(1, totalPages) // totalPages가 0일 때 최소 1
 
+    // 유효한 페이지로만 이동 (범위·중복 클릭 무시)
     const goToPage = (page) => {
         if (page < 1 || page > safeTotalPages) return   // 범위 밖이면 무시
         if (page === currentPage) return            // 이미 그 페이지면 무시
         onPageChange(page)                          // 통과하면 부모에게 알림
     }
 
-    // 예: 현재 페이지 기준으로 최대 10개 번호만 보여주기
+    // 현재 페이지 기준 최대 maxVisible개 번호만 표시
     function getPageNumbers(currentPage, totalPages, maxVisible = 10) {
         const pages = []
 

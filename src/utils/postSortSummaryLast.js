@@ -1,3 +1,4 @@
+/** AG Grid postSortRows - 부서 그룹 내 합계 행(isSummary)을 맨 아래로 고정 */
 export function postSortSummaryLast(params) {
     const rowNodes = params.nodes
 

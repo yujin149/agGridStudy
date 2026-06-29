@@ -10,9 +10,10 @@ function ReasonCellEditor({ value, onValueChange, stopEditing }) {
     const [text, setText] = useState(() => normalizeReasonForEdit(value))
 
     useEffect(() => {
-        inputRef.current?.focus()
+        inputRef.current?.focus() // 편집 시작 시 input·placeholder 표시
     }, [])
 
+    // 입력값 변경 → AG Grid onValueChange → draftData 갱신
     const handleChange = (event) => {
         const next = event.target.value
         setText(next)
@@ -27,7 +28,7 @@ function ReasonCellEditor({ value, onValueChange, stopEditing }) {
             value={text}
             placeholder={REJECT_REASON_PLACEHOLDER}
             onChange={handleChange}
-            onBlur={() => stopEditing()}
+            onBlur={() => stopEditing()} // 포커스 이탈 시 편집 종료 (검증은 저장 시)
         />
     )
 }

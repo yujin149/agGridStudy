@@ -54,6 +54,7 @@ const BasicGrid = forwardRef(function BasicGrid(
 ) {
     const gridRef = useRef(null)
 
+    // ref로 AgGridReact 인스턴스 노출 (EmployeeGrid에서 api.stopEditing 등 호출)
     useImperativeHandle(ref, () => gridRef.current)
 
     return (

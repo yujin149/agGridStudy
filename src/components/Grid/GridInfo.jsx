@@ -2,6 +2,7 @@ import styles from './GridInfo.module.css'
 
 const PAGE_SIZE_OPTIONS = [10, 20, 30, 50]
 
+/** 그리드 상단 정보 - 총 건수·페이지 크기 select·버튼 영역 */
 function GridInfo({ totalCount, pageSize, onPageSizeChange, buttonWrap }) {
     return (
         <div className={styles.gridInfo}>
