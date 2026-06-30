@@ -31,7 +31,7 @@ export function addDepartmentSubtotals(rows) {
             reason:
                 approvedCount > 0
                     ? `${approvedAmount.toLocaleString()}원`
-                    : '승인완료 0건',
+                    : '0',
             isSummary: true,
         })
     }

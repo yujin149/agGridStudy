@@ -34,6 +34,8 @@ const gridTheme = themeQuartz.withParams({
     wrapperBorderRadius: 0,
 })
 
+const NO_ROWS_MESSAGE = '조회된 데이터가 없습니다.'
+
 const BasicGrid = forwardRef(function BasicGrid(
     {
         rowData,
@@ -77,6 +79,7 @@ const BasicGrid = forwardRef(function BasicGrid(
                 onCellMouseDown={onCellMouseDown}
                 onCellClicked={onCellClicked}
                 stopEditingWhenCellsLoseFocus={stopEditingWhenCellsLoseFocus}
+                localeText={{ noRowsToShow: NO_ROWS_MESSAGE }}
             />
         </div>
     )

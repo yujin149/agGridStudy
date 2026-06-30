@@ -1,0 +1,65 @@
+.searchWrap {
+    border-radius: var(--radius-md);
+    padding: 4rem;
+    background: var(--card-background-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 6rem;
+    box-shadow: var(--shadow-sm);
+    margin-top: 4rem;
+}
+
+.searchBox {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 23rem);
+    gap: 1rem;
+}
+
+.col1 {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.schTit {
+    width: 10rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-primary-color);
+    flex-shrink: 0;
+}
+
+.col1 input[type='text'] {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    height: 4rem;
+    padding: 0 1rem;
+}
+
+.col1 input::placeholder {
+    color: var(--gray-color-400);
+}
+
+.statusChk {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    min-height: 4rem;
+}
+
+.schBtnWrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.schBtnWrap button {
+    flex-shrink: 0;
+    width: 8rem;
+}
